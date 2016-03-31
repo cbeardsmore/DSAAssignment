@@ -1,0 +1,169 @@
+DSA ASSIGNMENT NOTES
+--------------------
+
+
+INPUT FILES
+-----------
+-DC Description File
+-Task File
+
+
+CARTONS
+-------
+-Consignment Note. +ve int, (1-1024). UNIQUE for given DC center.
+-Product Type. ascii string.
+-Wholesaler Name. ascii string.
+-Warranty Date. ascii string. format: YYYY-MM-DD (Lifetime = 0000-00-00)
+
+
+DISTRIBUTION CENTRES (DC)
+-------------------------
+-Stock Rooms. Fixed Capacity. 0 indexed. Never remodelled. Spots are 0 indexed.
+-Need to handle at least 2000+, each with 200+ carton spots
+
+3 LAYOUTS:
+	DEAD-END
+	--------
+	-Stack. LIFO removal. Avoid old products that could expire.
+	ROLLING
+	-------
+	-Queue. FIFO removal. shuffles down, not circular. No gaps between cartons.
+	-Less space than Dead-end stock rooms.
+	YARD
+	----
+	-Linked List/General array??. Any carton removed at any time.
+	-Most flexible, least amount of space though.
+	-Cartons can be added/removed arbitrarily, can be gaps between cartons
+
+-Each DC can have different number of stock rooms.
+-Each stock room may have a different capacity.
+-Cartons can may between stock rooms, given there is space. (Shuffling around allowed)
+
+
+DC DESCRIPTION FILE
+-------------------
+-Colon seperated unix line. 2 distinct sections, seperated by %
+-Ignore ALL blank lines, and lines beginning with #
+-Must detect errors + discrepencies between 1st and 2nd sections. 
+
+2 Sections:
+	DC GEOMETRY
+	-----------
+	-Each row is a stock room, index of stock room is order of rows
+	-First element: D/R/Y type.
+	-Other elements: empty (::) or consignment notes (0-indexed)
+	CARTON DESCRIPTION
+	------------------
+	-Each row is a carton. no particular order! 
+	-Format is: ConsignmentNote:Warranty:Type:Wholesaler
+
+
+TASKS
+-----
+-Receiving a carton delivery
+-Shipping stock
+-Searching for cartons
+
+	RECEIVING
+	---------
+	-Figure out stock room and yard type to store new carton in
+	-If DC is full, this must be reported
+	-Algorithm, must be at least half + diagram to justify it
+	-Print to standard output, index of stock room + index IN stock room (ONE LINE)
+	-REWRITE DC descriptor file, filename appended with "-output"
+
+		TASKFILE
+		--------
+		-Single row, colon sep value.
+		- 'A', followed by 4 carton details.	
+
+	SHIPPING
+	--------
+	-Find best carton to remove for product + number of moves required
+	-Balance between movements + inconveience of room structure
+	-Algorithm, half a page + diagram to explain 
+	-Print to standard output, index of stock room + index IN stock room (ONE LINE)
+	-Next line: print carton description
+	-If you can't shuffle cartons, output "STUCK"
+	-REWRUTE DC descriptor file, filename appended with "-output" (Including Shuffling)
+
+		TASKFILE
+		--------
+		-Single row, colon sep value.
+		- 'R', followed by product type	
+
+	SEARCHING
+	---------
+	-Done via search tree OR sorting algorithm. 1/4 marks for brute forcing.
+	-Algorithm: full page + diagram to explain properly
+	-Print to standard output, index of stock room + index IN stock room
+	-Print also, four carton elements description
+	-Return cartons in ascending order of stock room, and ascending stock room index
+	-Warranty: search must match all earlier expiry dates
+	-DO NOT alter DC descriptor file
+
+		TASK FILE
+		---------
+		-Single row, colon sep value.
+		- 'S', followed by 4 cartons details. May be blank, may not	
+
+
+MARKING
+-------
+- 30%: read.interpret/ write DC desciption files
+- 15%: implementation of adding
+- 15%: implementation of removing
+- 15%: implementation of searching
+
+- 50% of marks is functionality actually working correctly
+- 50% of marks is use of data structures and coding style
+
+
+SUBMISSION
+----------
+-BOTH electronic and paper copy. 5:00 pm on October 28th
+-Paper submission TO DSA pigeon hole in 314
+-Electronic submission To blackboard, assignments section
+-Must run and compile on lab computers
+-Must be compilable via: "javac DSAAssignment.java"
+-Must be runnable via: "java DSAAssignment [DC file] [Task file]"
+
+	ELECTRONIC
+	----------
+	-Single GZip'd Tarball (.tar.gz), name: "DSA2015S2-assignment-15504319"
+	-Contain: all java source code, conforming to Java6
+	-Report in plain ascii, with (.txt) extension, not pdf or doc
+	-Images in (.png) or (.jpg) format. Class Diagram: "classdiagram.png"
+	-DO NOT USE DIFFERENT FORMATS HERE
+
+	PAPER
+	-----
+	-A4 Size, white paper of at least 80gsm
+	-Include standard Dept.Of.Computing cover page
+	-All text legible. and in black
+	-Font no smaller than 10pt, Arial/Times New Roman/Courier
+	-Can be double sided, margins down to 5mm
+	-Number pages consecutively, cover page counts as page 1
+	-Securely fastening, staple etc. Clear plastic sleeve aswell
+	-Put student number on EVERY page, can use font as small as 6px for this
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

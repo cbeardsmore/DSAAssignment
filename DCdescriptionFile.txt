@@ -1,0 +1,12 @@
+D:1:2:3
+R::::::::
+Y:::::
+D:4:::::::
+
+%
+
+1:0000-00-00:hello:Lenubu
+2:0000-00-00:Laptop:Lenubu
+4:0000-00-00:connor:zfsdfgsdgd
+3:0000-00-00:world:Lenubu
+

@@ -1,0 +1,43 @@
+Connor Beardsmore - 15504319
+DSA Assignment - Semester 2, 2015
+---------------------------------
+        ASSIGNMENT REPORT
+---------------------------------
+
+Program Overview
+----------------
+The DSAAssignment program is a software system that manages the logistics of a "Distribution Centre." From a given DC description file, the program can construct a DC object and populate the DC with the appropriate stockrooms and Cartons. Once the DC is porperly created, the program currently supports 3 tasks to perform on the DC. These tasks are adding a new Carton into the DC, removing a carton, and searching for matching Cartons.
+
+
+Design Focus
+------------
+The primary design focus while developing the system was optimal search speed. The aim was to make searching as fast as possible, while still managing memory relatively efficiently. There is always a trade-off between memory and speed, and in this situation, development favoured the faster approach and sacrifed memory to an extent. The fast search is acheived by setting up a "Search Environment" when creating the DC. This search environment allows for quick search based on any combination of Carton fields. The downside to this is having to update the environment everytime we add or remove a Carton.
+
+
+Algorithm Justification
+-----------------------
+
+	Receiving
+	---------
+	The algorithm for receiving a new Carton delivery is the most basic of all the tasks. The primary factor in choosing where to store an item was it's date, ensuring that stock is preferentially shipped before the warranty date expires. The algorithm is based around a preference system. Before anything occurs, the DC is checked to see if it is full, to avoid irrelevant calculations. If so, nothing can be acheived and the algorithm finishes. The processAdd() function allocates a carton to a stockroom based around it's preferences. The function first attempts to store the item in a stockroom that matches the first preference. If this fails, it attempts to store it in a stockroom of second preference and so forth. It is the date of a Carton that determines the stockroom preferences of the Carton. For Cartons with lifetime warrantys, the first preference is a DeadEnd, as there is no chance of the item getting "stuck" and the warranty expiring. If all DeadEnd's are full, the Rolling corridors are tried next and after that the Yards. The non lifetime warranty Cartons are split into urgent and non-urgent items. Urgent items are ones whose date is within 6 months of the current date. The value 6 is stored within the MONTH_URGENCY constant and thus depending on the situation, the urgency can be incremented or decremented to alter the addition. Items classed as urgent are preferentially added to the Yards, then Rolling Corridors, then DeadEnds. This ensures there is the lowest possibility of the item getting lost and thus access time to retreive the item is quicker. Non-urgent items have a first preference of a Rolling Corridor, as to try and allow the yards to be free for more urgent items. However if this is not possible, a Yard is tried second. There is a possibility that adding to a DeadEnd room second and a Yard third would be more effecient, but this is dependant on the current state of the DC and more indepth analysis would have to be undertaken to determine this. A strong advantage of this system is the ability to alter the preferences at a later date with ease. Hence, more features could easily be added that build on the calling the processAdd() function. Another simple modification that should be made to the alogrithm is the checking of a stockrooms capacity. Hence, while adding to a DeadEnd, the item should be allocated to the stockroom with the lowest number of items, to spread the load of items across the DC. This will increase the effiecency of room by resulting in less shuffling of items.
+
+	Removing
+	--------
+	The remove algorithm relies heavily upon the search task. The search function is called given the product name and an array of all matching items within the DC is found. Inserting these values into a sorted linked list gives us all matching items sorted by date. This allows us to remove items that expire first preferentially over other items. There is a tradeoff between removing soon-to-expire items first and removing items as effecienctly as possible. The function attempts to strive a medium balance between the two.
+
+	Searching
+	---------
+	The searching algorithm itself is relatively straight-forward. The difficulty with the search was setting up the environment so that you can quickly search based on any combination of Carton fields. The CartonSearcher object stores 3 classfields that are utilised throughout searching. The dates of all items within the DC are stored within a sorted linked list, ranging from soonest to most distant. Two binary search tree's are also set up for both product and wholesaler. Each tree has nodes that are themselves Linked Lists. The lists, store items of the same product type and hence the key for the tree is the product name. This enables quick access to every item of a matching product or wholesaler. The index array within DC is also used within searching to allow for O(1) access time to any Carton, given its consignment note.
+
+	The search algorithm first tokenizes the fields to determine which parameters to search by. If the consignment note is given, the Carton is recieved from the index array within DC. If only the date is given, the Date list is iterated through, storing every matching date into a seperate linked list. This is simple, as we take every element up until the date we need is found. If product or wholesaler is given, we search the binary tree for the relative linked list. With this linked list from either product/wholesaler/date, we turn it into an array. This array is then sorted by both stockroom index and room index ascending. The program will then output the contents of the array to the user.
+
+	Search Access Time:  
+		Consignment Note - O(1)
+		Date 			 - O(N)
+		Product          - O(logN)
+		Wholesaler       - O(logN)
+
+
+Upgradability Remarks
+---------------------
+Althought the system has primarily been designed around optimal search time, it is still relatively extensible. The implementation of the IStockRoom inferface allows for other types of stockrooms to be added in the future, providing a framework for the methods they should contain. The algorithms within TaskFunctions will require little modification to be workable on 4 types of stockroom. This sytem supports a range of 1024 consignment notes, but that figure is readily upgradable, by modifying the MAX_CON_NOTE constant within Carton class. However, as mentioned earlier, with larger amounts of Cartons, the memory effeciency scaling is relatively poor. A simple fix to this problem is to replace the index array with a Hash Table. This allows for greater memory effieciency while still maintaining fast access time. There is slight overheads involved with maintaining a Hash Table and thus for 1024 items, it was not necessary.  
