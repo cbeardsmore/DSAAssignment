@@ -1,11 +1,10 @@
-##DSA120 Distribution Centre
-###Semester 2, 2015
+# dsadistro
 
-#####Purpose:
+##### Data Structures and Algorithms - Distribution Centre
 	
 Java based application to run a virtual "Distribution Centre". Utilization of data structures to ADD / REMOVE / SEARCH for items in the DC, with varying types of Stockrooms within the DC also. Specifications for input files can be found under documentation/specifications and test files under testFiles/
 
-#####Usage
+##### Usage
 
 	javac DSAAssignment.java
 	java DSAAssignment <DC FILE> <TASK FILE>
@@ -18,7 +17,7 @@ Java based application to run a virtual "Distribution Centre". Utilization of da
 	TaskFunctions.java
 	FileIO.java
 	
-#####Data Structures from connorLib Package	
+#####Data Structures from connorLib Package
 
 	DateClass.java          	IStockRoom.java
 	DistroCentre.java       	DeadEnd.java
