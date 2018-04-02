@@ -33,7 +33,7 @@ Algorithm Justification
 
 	Search Access Time:  
 		Consignment Note - O(1)
-		Date 			 - O(N)
+		Date 		 - O(N)
 		Product          - O(logN)
 		Wholesaler       - O(logN)
 
